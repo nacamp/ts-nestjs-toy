@@ -4,6 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
+import { UsersModule } from '../users/users.module';
 
 // @Module({
 //   controllers: [AuthController],
@@ -14,6 +15,7 @@ import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
+    UsersModule,
     PassportModule,
     JwtModule.register({
       secret: 'SECRET_KEY', // 실제 운영에선 process.env.JWT_SECRET

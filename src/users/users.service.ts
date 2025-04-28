@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -7,8 +9,15 @@ import { User } from './entities/user.entity';
 export class UsersService {
   private users: User[] = [];
 
-  create(createUserDto: CreateUserDto) {
-    const newUser = { id: Date.now().toString(), ...createUserDto };
+  async create(createUserDto: CreateUserDto) {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
+    const newUser = {
+      id: Date.now().toString(),
+      name: createUserDto.name,
+      email: createUserDto.email,
+      password: hashedPassword, // 암호화된 비밀번호 저장
+    };
     this.users.push(newUser);
     return newUser;
   }
@@ -46,4 +55,10 @@ export class UsersService {
     }
     return { message: 'User not found' };
   }
+
+  findUserByEmail(email: string) {
+    return this.users.find(user => user.email === email);
+  }
+  
+
 }
