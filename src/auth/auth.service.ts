@@ -1,35 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
   //private loggedInUsers = new Set<string>();
-  constructor(private readonly jwtService: JwtService) {}
-
-  // login(loginDto: LoginDto) {
-  //   const { email, password } = loginDto;
-  //   if (email === 'test@example.com' && password === 'password') {
-  //     this.loggedInUsers.add(email);
-  //     return { message: 'Login successful' };
-  //   } else {
-  //     return { message: 'Invalid credentials' };
-  //   }
-  // }
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService, // 주입
+  ) {}
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    // 더미 사용자 체크
-    if (email === 'test@example.com' && password === 'password') {
-      console.log('Login successful');
-      const payload = { email, sub: 1 }; // sub: 유저 ID라고 생각
-      const token = this.jwtService.sign(payload);
-      return { access_token: token };
-    } else {
-      console.log('111Login successful');
+    const user = this.usersService.findUserByEmail(email);
+    if (!user) {
+      return { message: 'User not found' };
+    }
+
+    const isPasswordMatching = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatching) {
       return { message: 'Invalid credentials' };
     }
+
+    const payload = { email: user.email, sub: user.id };
+    const token = this.jwtService.sign(payload);
+    return { access_token: token };
   }
 
   logout() {

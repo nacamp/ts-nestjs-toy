@@ -2,14 +2,22 @@ import requests
 
 # 서버 URL
 BASE_URL = "http://localhost:3000"
+login_url = f"{BASE_URL}/auth/login"
+users_url = f"{BASE_URL}/users"
+
+#0. 회원가입해서 유저 생성
+print("Create User Response:")
+data = { "email": "test@example.com", "name" : "tester", "password":"password"}
+response = requests.post(users_url, json=data)
+print("Create User Response:", response.json())
+
 
 # 1. 로그인해서 토큰 받기
-login_url = f"{BASE_URL}/auth/login"
+print("Login  Response:")
 login_payload = {
     "email": "test@example.com",  # 로그인 이메일
     "password": "password"        # 로그인 비밀번호
 }
-
 login_response = requests.post(login_url, json=login_payload)
 print("Login Response:", login_response.json())
 print("Login Response:", login_response.status_code)
@@ -23,15 +31,10 @@ else:
     exit()
 
 # 2. 토큰으로 /users API 호출
-users_url = f"{BASE_URL}/users"
+print("Users  Response:")
 headers = {
     "Authorization": f"Bearer {access_token}"
 }
-
-# Create a new user
-data = { "email": "jimmy@naver.com", "name" : "jimmy", "password":"password"}
-response = requests.post(users_url, data=data, headers=headers)
-print("Create User Response:", response.json())
 
 # Find all users
 users_response = requests.get(users_url, headers=headers)
