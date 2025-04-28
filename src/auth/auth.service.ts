@@ -7,6 +7,8 @@ import { UsersService } from '../users/users.service';
 @Injectable()
 export class AuthService {
   //private loggedInUsers = new Set<string>();
+  private refreshTokens = new Map<string, string>(); // userId => refreshToken
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService, // 주입
@@ -26,12 +28,38 @@ export class AuthService {
     }
 
     const payload = { email: user.email, sub: user.id };
-    const token = this.jwtService.sign(payload);
-    return { access_token: token };
+    const access_token = this.jwtService.sign(payload, { expiresIn: '1h' });
+    const refresh_token = this.jwtService.sign(payload, { expiresIn: '7d' });
+
+    // 메모리에 저장
+    this.refreshTokens.set(user.id, refresh_token);
+
+    return { access_token, refresh_token, id: user.id };
   }
 
-  logout() {
-    // 실제로는 토큰을 만료시키거나, 세션을 끊는 작업
+  async refresh(userId: string, refreshToken: string) {
+    const storedToken = this.refreshTokens.get(userId);
+    if (!storedToken) {
+      throw new Error('No refresh token stored');
+    }
+
+    if (storedToken !== refreshToken) {
+      throw new Error('Refresh token mismatch');
+    }
+
+    const user = this.usersService.findOne(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const payload = { email: user.email, sub: user.id };
+    const newAccessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+
+    return { access_token: newAccessToken };
+  }
+
+  logout(userId: string) {
+    this.refreshTokens.delete(userId);
     return { message: 'Logout successful' };
   }
 }

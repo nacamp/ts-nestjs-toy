@@ -4,15 +4,20 @@ import { LoginDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 
-    @Post('logout')
-  logout() {
-    return this.authService.logout();
+  @Post('refresh')
+  async refresh(@Body() body: { userId: string; refreshToken: string }) {
+    return this.authService.refresh(body.userId, body.refreshToken);
+  }
+
+  @Post('logout')
+  logout(@Body() body: { userId: string }) {
+    return this.authService.logout(body.userId);
   }
 }
