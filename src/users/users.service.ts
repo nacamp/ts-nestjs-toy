@@ -37,4 +37,13 @@ export class UsersService {
     }
     return null;
   }
+
+  changePassword(id: string, newPassword: string) {
+    const user = this.findOne(id);
+    if (user) {
+      user.password = newPassword;
+      return { message: 'Password changed' };
+    }
+    return { message: 'User not found' };
+  }
 }
