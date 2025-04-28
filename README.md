@@ -1,5 +1,11 @@
 #
 
+## case: jwt
+```bash
+npm install @nestjs/passport passport passport-jwt @nestjs/jwt
+npm install --save-dev @types/passport-jwt
+```
+
 ## operation
 ### case: create ...
 ```
