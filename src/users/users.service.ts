@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from '../prisma/prisma.service';
@@ -7,7 +7,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject('CONFIG') private readonly config: { dbHost: string; dbPort: number },) { }
 
   async create(createUserDto: CreateUserDto) {
     const saltRounds = 10;
@@ -28,6 +30,7 @@ export class UsersService {
   }
 
   async findAll() {
+    console.log('Config:', this.config);
     return this.prisma.user.findMany();
   }
 
@@ -65,6 +68,6 @@ export class UsersService {
       where: { email },
     });
   }
-  
+
 
 }
