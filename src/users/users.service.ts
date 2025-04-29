@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,7 +10,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
-    @Inject('CONFIG') private readonly config: { dbHost: string; dbPort: number },) { }
+    @Inject('CONFIG') private readonly config: { dbHost: string; dbPort: number },
+    private readonly configService: ConfigService) { }
 
   async create(createUserDto: CreateUserDto) {
     const saltRounds = 10;
@@ -31,6 +33,7 @@ export class UsersService {
 
   async findAll() {
     console.log('Config:', this.config);
+    console.log('ConfigService:', this.configService.get("ENV_NAME"));
     return this.prisma.user.findMany();
   }
 

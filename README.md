@@ -1,5 +1,22 @@
 #
 
+## case: config
+```bash
+npm install @nestjs/config
+
+// prisma db 설정
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  constructor(config: ConfigService) {
+    super({
+      datasources: {
+        db: {
+          url: config.get<string>('DATABASE_URL'),
+        },
+      },
+    });
+  }
+```
+
 ## case: orm using prisma
 ```bash
 npm install @prisma/client
