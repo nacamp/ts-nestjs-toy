@@ -6,7 +6,6 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  //private loggedInUsers = new Set<string>();
   private refreshTokens = new Map<string, string>(); // userId => refreshToken
 
   constructor(
@@ -17,7 +16,7 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    const user = this.usersService.findUserByEmail(email);
+    const user = await this.usersService.findUserByEmail(email);
     if (!user) {
       return { message: 'User not found' };
     }
@@ -47,7 +46,7 @@ export class AuthService {
       throw new Error('Refresh token mismatch');
     }
 
-    const user = this.usersService.findOne(userId);
+    const user = await this.usersService.findOne(userId);
     if (!user) {
       throw new Error('User not found');
     }

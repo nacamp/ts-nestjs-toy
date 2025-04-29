@@ -1,5 +1,49 @@
 #
 
+## case: orm using prisma
+```bash
+npm install @prisma/client
+npm install --save-dev prisma
+npx prisma init
+
+
+vi .env
+DATABASE_URL="file:../db/dev.db"
+
+
+vi schema.prisma
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../src/generated/prisma" => nestjs에서 제거하자. 실행이 안된다.
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+
+// schema.prisma -> DB
+npx prisma migrate dev --name init
+npx prisma generate
+
+// DB -> schema.prisma
+npx prisma db pull
+npx prisma generate
+
+// 코드생성
+nest g service prisma
+nest g module prisma
+```
+
 ## case: bcrypt
 ```bash
 npm install bcrypt

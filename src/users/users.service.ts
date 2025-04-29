@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
     const saltRounds = 10;
@@ -18,46 +18,52 @@ export class UsersService {
       email: createUserDto.email,
       password: hashedPassword, // 암호화된 비밀번호 저장
     };
-    this.users.push(newUser);
-    return newUser;
+    return this.prisma.user.create({
+      data: {
+        name: createUserDto.name,
+        email: createUserDto.email,
+        password: hashedPassword,
+      },
+    });
   }
 
-  findAll() {
-    return this.users;
+  async findAll() {
+    return this.prisma.user.findMany();
   }
 
-  findOne(id: string) {
-    return this.users.find(user => user.id === id);
+  async findOne(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    const user = this.findOne(id);
-    if (user) {
-      Object.assign(user, updateUserDto);
-    }
-    return user;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
   }
 
-  remove(id: string) {
-    const index = this.users.findIndex(user => user.id === id);
-    if (index > -1) {
-      const removed = this.users.splice(index, 1);
-      return removed[0];
-    }
-    return null;
+  async remove(id: string) {
+    return this.prisma.user.delete({
+      where: { id },
+    });
   }
 
-  changePassword(id: string, newPassword: string) {
-    const user = this.findOne(id);
-    if (user) {
-      user.password = newPassword;
-      return { message: 'Password changed' };
-    }
-    return { message: 'User not found' };
+
+  async changePassword(id: string, newPassword: string) {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    return this.prisma.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
   }
 
-  findUserByEmail(email: string) {
-    return this.users.find(user => user.email === email);
+
+  async findUserByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
   }
   
 
