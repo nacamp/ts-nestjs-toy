@@ -5,13 +5,8 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
-
-// @Module({
-//   controllers: [AuthController],
-//   providers: [AuthService],
-// })
-// export class AuthModule {}
-
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -23,7 +18,13 @@ import { UsersModule } from '../users/users.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [
+    // global guard 설정을 통해 모든 요청에 대해 JWT 인증을 적용
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // }, 
+    AuthService, JwtStrategy],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

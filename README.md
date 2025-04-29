@@ -1,5 +1,16 @@
 #
 
+## case: global guards
+```
+// in auth.module.ts
+providers: [
+  {
+  provide: APP_GUARD,
+  useClass: JwtAuthGuard,
+  },
+]
+```
+
 ## case: config
 ```bash
 npm install @nestjs/config
