@@ -7,10 +7,10 @@ login_url = f"{BASE_URL}/auth/login"
 users_url = f"{BASE_URL}/users"
 
 #0. 회원가입해서 유저 생성
-print("Create User Response:")
-data = { "email": "test@example.com", "name" : "tester", "password":"password"}
-response = requests.post(users_url, json=data)
-print("Create User Response:", response.json())
+# print("Create User Response:")
+# data = { "email": "test@example.com", "name" : "tester", "password":"password"}
+# response = requests.post(users_url, json=data)
+# print("Create User Response:", response.json())
 
 
 # 1. 로그인해서 토큰 받기
@@ -24,9 +24,14 @@ print("Login Response:", login_response.json())
 print("Login Response:", login_response.status_code)
 if 200 <= login_response.status_code < 300:
     print('Login successful')
-    access_token = login_response.json().get("access_token")
-    refresh_token = login_response.json().get("refresh_token")
-    user_id = login_response.json().get("id")
+    r = login_response.json()
+    access_token = r.get("data").get("access_token")
+    refresh_token = r.get("data").get("refresh_token")
+    user_id = r.get("data").get("id")
+
+    # access_token = login_response.json().get("access_token")
+    # refresh_token = login_response.json().get("refresh_token")
+    # user_id = login_response.json().get("id")
     print(f"Access Token: {access_token}")
     print(f"Refresh Token: {refresh_token}")
 else:
