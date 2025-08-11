@@ -160,3 +160,28 @@ nest new nestjs-toy
   "typescript.preferences.importModuleSpecifier": "relative"
 }
 ```
+
+## vscode debugging
+
+- vi .vscode/launch.json
+- launch F5
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug NestJS",
+      "program": "${workspaceFolder}/src/main.ts",
+      "runtimeExecutable": "/Users/jimmy/.n/bin/node",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal"
+    }
+  ]
+}
+```
