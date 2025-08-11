@@ -3,10 +3,10 @@ import { Module } from '@nestjs/common';
 @Module({
   providers: [
     {
-      provide: 'CONFIG',
-      useValue: { dbHost: 'localhost', dbPort: 3306 },
+      provide: 'DEMO_CONFIG',
+      useValue: { demo1: 'demo1 value', demo2: 2222 },
     },
   ],
-  exports: ['CONFIG'],
+  exports: ['DEMO_CONFIG'],
 })
 export class ConfigModule {}

@@ -1,5 +1,32 @@
 #
 
+## case: providers에 Service 클래스 대신 직접 객체를 주입하는 방식 예제
+
+- 정의
+
+```
+@Module({
+  providers: [
+    {
+      provide: 'DEMO_CONFIG',
+      useValue: { demo1: 'demo1 value', demo2: 2222 },
+    },
+  ],
+  exports: ['DEMO_CONFIG'],
+})
+```
+
+- 사용
+
+```
+@Injectable()
+export class UsersService {
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject('DEMO_CONFIG')
+    private readonly config: { demo1: string; demo2: number },
+```
+
 ## case: global guards
 
 ```
@@ -12,7 +39,7 @@ providers: [
 ]
 ```
 
-## case: config
+## case: prisma db setup
 
 ```bash
 npm install @nestjs/config

@@ -11,8 +11,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
-    @Inject('CONFIG')
-    private readonly config: { dbHost: string; dbPort: number },
+    @Inject('DEMO_CONFIG')
+    private readonly config: { demo1: string; demo2: number },
     private readonly configService: ConfigService,
   ) {}
 
@@ -24,12 +24,12 @@ export class UsersService {
       createUserDto.password,
       saltRounds,
     );
-    const newUser = {
-      id: Date.now().toString(),
-      name: createUserDto.name,
-      email: createUserDto.email,
-      password: hashedPassword, // 암호화된 비밀번호 저장
-    };
+    // const newUser = {
+    //   id: Date.now().toString(),
+    //   name: createUserDto.name,
+    //   email: createUserDto.email,
+    //   password: hashedPassword, // 암호화된 비밀번호 저장
+    // };
     return this.prisma.user.create({
       data: {
         name: createUserDto.name,
@@ -40,6 +40,7 @@ export class UsersService {
   }
 
   async findAll() {
+    //
     this.logger.log('Config:', this.config);
     this.logger.log('ConfigService:', this.configService.get('ENV_NAME'));
     return this.prisma.user.findMany();
