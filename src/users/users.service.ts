@@ -11,14 +11,19 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
-    @Inject('CONFIG') private readonly config: { dbHost: string; dbPort: number },
-    private readonly configService: ConfigService) { }
+    @Inject('CONFIG')
+    private readonly config: { dbHost: string; dbPort: number },
+    private readonly configService: ConfigService,
+  ) {}
 
   private readonly logger = new Logger(UsersService.name);
 
   async create(createUserDto: CreateUserDto) {
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      saltRounds,
+    );
     const newUser = {
       id: Date.now().toString(),
       name: createUserDto.name,
@@ -36,7 +41,7 @@ export class UsersService {
 
   async findAll() {
     this.logger.log('Config:', this.config);
-    this.logger.log('ConfigService:', this.configService.get("ENV_NAME"));
+    this.logger.log('ConfigService:', this.configService.get('ENV_NAME'));
     return this.prisma.user.findMany();
   }
 
@@ -59,7 +64,6 @@ export class UsersService {
     });
   }
 
-
   async changePassword(id: string, newPassword: string) {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     return this.prisma.user.update({
@@ -68,12 +72,9 @@ export class UsersService {
     });
   }
 
-
   async findUserByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
     });
   }
-
-
 }

@@ -15,14 +15,18 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
       isGlobal: true,
       envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`, '.env'],
     }),
-    UsersModule, AuthModule, ConfigModule],
+    UsersModule,
+    AuthModule,
+    ConfigModule,
+  ],
   controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
-    AppService, 
-    PrismaService],
+    AppService,
+    PrismaService,
+  ],
 })
-export class AppModule { }
+export class AppModule {}

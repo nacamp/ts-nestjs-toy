@@ -10,19 +10,16 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get(":id/sub/:id2")
+  @Get(':id/sub/:id2')
   getSubRoute(
-    @Param("id", ParseIntPipe) id: number,
-    @Param("id2") id2: string
+    @Param('id', ParseIntPipe) id: number,
+    @Param('id2') id2: string,
   ): string {
     return `sub id:${id} id2: ${id2}`;
   }
 
-  @Get("query")
-  getQuery(
-    @Query("id") id: string,
-    @Query("id2") id2: string
-  ): string {
+  @Get('query')
+  getQuery(@Query('id') id: string, @Query('id2') id2: string): string {
     return `query id:${id} id2: ${id2}`;
   }
 }

@@ -12,7 +12,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(), // 메서드 레벨
-      context.getClass(),   // 클래스 레벨
+      context.getClass(), // 클래스 레벨
     ]);
     if (isPublic) {
       // @Public 붙어있으면 Guard 무시

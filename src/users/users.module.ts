@@ -10,4 +10,4 @@ import { ConfigModule } from '../config/config.module';
   providers: [UsersService],
   exports: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}

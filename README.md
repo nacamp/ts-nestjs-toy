@@ -1,6 +1,7 @@
 #
 
 ## case: global guards
+
 ```
 // in auth.module.ts
 providers: [
@@ -12,6 +13,7 @@ providers: [
 ```
 
 ## case: config
+
 ```bash
 npm install @nestjs/config
 
@@ -29,6 +31,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 ```
 
 ## case: orm using prisma
+
 ```bash
 npm install @prisma/client
 npm install --save-dev prisma
@@ -73,12 +76,14 @@ nest g module prisma
 ```
 
 ## case: bcrypt
+
 ```bash
 npm install bcrypt
 npm install --save-dev @types/bcrypt
 ```
 
 ## case: bypass guards using decorator
+
 ```
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -93,6 +98,7 @@ create(@Body() createUserDto: CreateUserDto) {
 ```
 
 ## case: another module use
+
 ```typescript
 @Module({
   ...
@@ -109,26 +115,48 @@ export class UsersModule {}
 export class AuthModule {}
 ```
 
-
 ## case: jwt
+
 ```bash
 npm install @nestjs/passport passport passport-jwt @nestjs/jwt
 npm install --save-dev @types/passport-jwt
 ```
 
 ## operation
+
 ### case: create ...
+
 ```
 nest g resource users
 or
-nest g service users 
+nest g service users
 nest g module users
 nest g controller users
 ```
 
-## setup
+# setup
+
+## init
+
 - https://docs.nestjs.com/first-steps
+
 ```bash
 npm i -g @nestjs/cli
 nest new nestjs-toy
+```
+
+## eslint, prettier
+
+- vi .vscode/settings.json
+- 저장시 format 자동적용, 포맷터는 prettier 사용
+
+```json
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "typescript.preferences.importModuleSpecifier": "relative"
+}
 ```
