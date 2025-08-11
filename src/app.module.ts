@@ -6,8 +6,9 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
 //import { ConfigModule } from './config/config.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -17,7 +18,6 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     }),
     UsersModule,
     AuthModule,
-    ConfigModule,
   ],
   controllers: [AppController],
   providers: [
@@ -25,8 +25,14 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
     AppService,
     PrismaService,
   ],
 })
 export class AppModule {}
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(RequestIdMiddleware).forRoutes('*');
+//   }
+// }
