@@ -1,5 +1,43 @@
 # case
 
+## case: cors설정
+
+```
+  app.enableCors({
+    origin: origins.length ? origins : '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Authorization', 'Content-Type'],
+    // maxAge: 600, // 프리플라이트(Preflight) 10분
+    exposedHeaders: ['Content-Disposition'],
+  });
+```
+
+-vi index.html
+
+```html
+jimmy@gimjinmin-ui-Macmini test % cat index.html <!doctype html>
+<meta charset="utf-8" />
+<button id="ok">call API (allowed)</button>
+<script>
+  document.getElementById('ok').onclick = async () => {
+    try {
+      const r = await fetch('http://localhost:3000/', {
+        headers: { Authorization: 'Bearer DUMMY' }, // JWT 헤더 시뮬
+      });
+      console.log('status', r.status, 'text:', await r.text());
+    } catch (e) {
+      console.error('CORS blocked?', e);
+    }
+  };
+</script>
+```
+
+- env.development에서 CORS_ORIGINS ="http://test.com,http://localhost:5173" 변경하면서 테스트
+
+```bash
+python -m http.server 5173
+```
+
 ## case: providers에 Service 클래스 대신 직접 객체를 주입하는 방식 예제
 
 - 정의
@@ -225,3 +263,8 @@ nest new nestjs-toy
 - Prettier - Code formatter
 - REST Client
 - sqlite viewer
+
+## site
+
+- https://docs.nestjs.com/
+- https://nestjs.burt.pe.kr/

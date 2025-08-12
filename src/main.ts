@@ -4,11 +4,28 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
+function parseOrigins(env?: string): string[] {
+  return (env ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
   const nodeEnv = config.get<string>('NODE_ENV');
   const port = config.get<number>('PORT') ?? 3000;
+  const origins = parseOrigins(process.env.CORS_ORIGINS);
+
+  app.enableCors({
+    origin: origins.length ? origins : '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Authorization', 'Content-Type'],
+    // maxAge: 600, // 프리플라이트(Preflight) 10분
+    exposedHeaders: ['Content-Disposition'],
+  });
+
   if (nodeEnv === 'production') {
     app.useLogger(['error', 'warn']);
   } else {
