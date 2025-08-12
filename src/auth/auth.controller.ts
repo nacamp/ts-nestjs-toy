@@ -20,12 +20,12 @@ export class AuthController {
   }
 
   @Post('refresh')
-  async refresh(@Body() body: { userId: string; refreshToken: string }) {
-    return this.authService.refresh(body.userId, body.refreshToken);
+  async refresh(@Body() body: { id: string; refresh_token: string }) {
+    return this.authService.refresh(body.id, body.refresh_token);
   }
 
   @Post('logout')
-  logout(@Body() body: { userId: string }) {
-    return this.authService.logout(body.userId);
+  logout(@Body() body: { id: string }) {
+    return this.authService.logout(body.id);
   }
 }

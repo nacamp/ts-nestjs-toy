@@ -1,4 +1,4 @@
-#
+# case
 
 ## case: providers에 Service 클래스 대신 직접 객체를 주입하는 방식 예제
 
@@ -172,6 +172,11 @@ npm i -g @nestjs/cli
 nest new nestjs-toy
 ```
 
+## after git clone
+
+- 주의 아래문장은 table을 삭제후 생성시킨다.
+- npx prisma migrate dev --name init
+
 ## eslint, prettier
 
 - vi .vscode/settings.json
@@ -212,3 +217,11 @@ nest new nestjs-toy
   ]
 }
 ```
+
+## extensions
+
+- TypeScript Importer
+- ESLint
+- Prettier - Code formatter
+- REST Client
+- sqlite viewer
