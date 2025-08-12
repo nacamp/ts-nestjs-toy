@@ -1,7 +1,10 @@
+import helmet from 'helmet';
+
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
+import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 function parseOrigins(env?: string): string[] {
@@ -25,6 +28,14 @@ async function bootstrap() {
     // maxAge: 600, // 프리플라이트(Preflight) 10분
     exposedHeaders: ['Content-Disposition'],
   });
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
 
   if (nodeEnv === 'production') {
     app.useLogger(['error', 'warn']);

@@ -1,24 +1,41 @@
 # case
 
+## case: helmet 설정
+
+```typescript
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }),
+);
+```
+
 ## case: cors설정
 
-```
-  app.enableCors({
-    origin: origins.length ? origins : '*',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Authorization', 'Content-Type'],
-    // maxAge: 600, // 프리플라이트(Preflight) 10분
-    exposedHeaders: ['Content-Disposition'],
-  });
+```typescript
+app.enableCors({
+  origin: origins.length ? origins : '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Authorization', 'Content-Type'],
+  // maxAge: 600, // 프리플라이트(Preflight) 10분
+  exposedHeaders: ['Content-Disposition'],
+});
 ```
 
 -vi index.html
 
 ```html
-jimmy@gimjinmin-ui-Macmini test % cat index.html <!doctype html>
-<meta charset="utf-8" />
+<!doctype html><meta charset="utf-8" />
+<button onclick="load()">Load bad script</button>
 <button id="ok">call API (allowed)</button>
 <script>
+  function load() {
+    const s = document.createElement('script');
+    s.src = 'http://localhost:3000/bad-script';
+    document.body.appendChild(s);
+  }
   document.getElementById('ok').onclick = async () => {
     try {
       const r = await fetch('http://localhost:3000/', {
@@ -42,7 +59,7 @@ python -m http.server 5173
 
 - 정의
 
-```
+```typescript
 @Module({
   providers: [
     {
@@ -56,7 +73,7 @@ python -m http.server 5173
 
 - 사용
 
-```
+```typescript
 @Injectable()
 export class UsersService {
   constructor(
@@ -67,14 +84,14 @@ export class UsersService {
 
 ## case: global guards
 
-```
+```typescript
 // in auth.module.ts
 providers: [
   {
-  provide: APP_GUARD,
-  useClass: JwtAuthGuard,
+    provide: APP_GUARD,
+    useClass: JwtAuthGuard,
   },
-]
+];
 ```
 
 ## case: prisma db setup

@@ -1,4 +1,12 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Response } from 'express';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+  Res,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -8,6 +16,12 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @Get('bad-script')
+  getBadScript(@Res() res: Response) {
+    res.setHeader('Content-Type', 'text/plain'); // 잘못된 타입
+    res.send("console.log('should be blocked by nosniff');");
   }
 
   @Get(':id/sub/:id2')
